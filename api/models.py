@@ -64,22 +64,29 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.email
 
+
+
+class NewsCategory(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
 # Модель для новостей
 class News(models.Model):
     title = models.CharField(max_length=255)
     content = models.TextField()
-    category = models.CharField(max_length=100)
-    images = models.ManyToManyField('NewsImage', related_name='news_images', blank=True)
-
+    category = models.ForeignKey(NewsCategory, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
 
+
 # Модель для хранения изображений, связанных с новостями
 class NewsImage(models.Model):
-    news = models.ForeignKey(News, on_delete=models.CASCADE)
+    news = models.ForeignKey(News, on_delete=models.CASCADE, related_name='images')  # Add ForeignKey
     image = models.ImageField(upload_to="news_images/")
 
     def __str__(self):
