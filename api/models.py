@@ -6,7 +6,71 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 #!UTILS:
 
+REGIONS = [
+    ('tashkent_city', 'Tashkent City'),
+    ('tashkent', 'Tashkent'),
+    ('samarkand', 'Samarkand'),
+    ('bukhara', 'Bukhara'),
+    ('navoi', 'Navoi'),
+    ('fergana', 'Fergana'),
+    ('andijan', 'Andijan'),
+    ('namangan', 'Namangan'),
+    ('surkhandarya', 'Surkhandarya'),
+    ('kashkadarya', 'Kashkadarya'),
+    ('khorezm', 'Khorezm'),
+    ('karakalpakstan', 'Karakalpakstan'),
+    ('jizzakh', 'Jizzakh'),
+    ('sirdarya', 'Sirdarya'),
+]
 
+# Словарь районов, привязанный к каждому региону
+DISTRICTS = {
+    'tashkent_city': [
+        ('mirzo_ulugbek', 'Mirzo Ulugbek'),
+        ('yakkasaray', 'Yakkasaray'),
+    ],
+    'tashkent': [
+        ('bekabad', 'Bekabad'),
+        ('chinaz', 'Chinaz'),
+    ],
+    'samarkand': [
+              ('bulungur', 'Bulungur'),
+        ('pakhtachi', 'Pakhtachi'),
+    ],
+    'bukhara': [
+              ('buxara-1', 'buxara-1'),
+    ],
+    'navoi': [
+              ('Navoi-1', 'Navoi-1'),
+    ],
+    'fergana': [
+              ('Fergana-1', 'Fergana-1'),
+    ],
+    'andijan': [
+              ('Andijan-1', 'Andijan-1'),
+    ],
+    'namangan': [
+              ('Namangan-1', 'Namangan-1'),
+    ],
+    'surkhandarya': [
+              ('Surkhandarya-1', 'Surkhandarya-1'),
+    ],
+    'kashkadarya': [
+              ('Kashkadarya-1', 'Kashkadarya-1'),
+    ],
+    'khorezm': [
+              ('Khorezm-1', 'Khorezm-1'),
+    ],
+    'karakalpakstan': [
+              ('Karakalpakstan-1', 'Karakalpakstan-1'),
+    ],
+    'jizzakh': [
+              ('zaamin', 'Zaamin'),
+    ],
+    'sirdarya': [
+              ('gulistan', 'Gulistan'),
+    ],
+}
 
 
 
@@ -126,14 +190,17 @@ class Service(models.Model):
 # Модель для плантаций
 class Plantation(models.Model):
     producer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='plantations')
-    location = models.CharField(max_length=255) 
-    status = models.CharField(max_length=50)
     established_date = models.DateField()
-    area_size = models.FloatField()  
+
+    status = models.CharField(max_length=50)
+    latitude = models.CharField(max_length=255) 
+    longitude = models.CharField(max_length=255) 
     crop_type = models.CharField(max_length=100)
+    area_size = models.FloatField()  
+    region = models.CharField(max_length=50, choices=REGIONS)
+    district = models.CharField(max_length=50) 
 
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'Plantation by {self.producer}'

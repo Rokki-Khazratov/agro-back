@@ -27,7 +27,7 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Plantation)
 class PlantationAdmin(admin.ModelAdmin):
-    list_display = ('producer', 'location', 'status', 'area_size', 'crop_type', 'established_date')
+    list_display = ('producer', 'latitude','longitude', 'status', 'area_size', 'crop_type', 'established_date')
     search_fields = ('producer__first_name', 'producer__last_name', 'crop_type')
     list_filter = ('status', 'crop_type')
 
