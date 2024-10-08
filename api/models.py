@@ -91,22 +91,37 @@ class NewsImage(models.Model):
 
     def __str__(self):
         return f"Image for {self.news.title}"
+    
 
-# Модель для продуктов
-class Product(models.Model):
-    name = models.CharField(max_length=100)
-    type = models.CharField(max_length=100)
-    variety = models.CharField(max_length=100)
-    region = models.CharField(max_length=100)
-    producer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
-    harvest_time = models.DateField()
 
-    forecast = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+# Модель для категории (синяя часть на скриншоте)
+class Category(models.Model):
+    name = models.CharField(max_length=100)  
 
     def __str__(self):
         return self.name
+
+# Модель для сервиса (красная часть на скриншоте)
+class Service(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='services')  # Связь с категорией
+    name = models.CharField(max_length=100) 
+    image = models.ImageField(upload_to="services_images/") 
+    link = models.URLField(max_length=255) 
+
+    def __str__(self):
+        return self.name
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Модель для плантаций
 class Plantation(models.Model):
@@ -122,6 +137,22 @@ class Plantation(models.Model):
 
     def __str__(self):
         return f'Plantation by {self.producer}'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Модель для уведомлений
 # class Notification(models.Model):

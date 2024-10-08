@@ -42,3 +42,19 @@ class NewsImageSerializer(serializers.ModelSerializer):
         news = validated_data.pop('news')
         instance = NewsImage.objects.create(image=image, news=news)
         return instance
+    
+
+
+# Сериализатор для сервиса
+class ServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['id', 'name', 'image', 'link']
+
+# Сериализатор для категории с вложенными сервисами
+class CategorySerializer(serializers.ModelSerializer):
+    services = ServiceSerializer(many=True, read_only=True)  # Вложенные сервисы
+
+    class Meta:
+        model = Category
+        fields = ['id', 'name', 'services']

@@ -24,17 +24,21 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('email', 'first_name', 'last_name', 'created_at')
     search_fields = ('email', 'first_name', 'last_name')
 
-@admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'variety', 'region', 'producer', 'harvest_time')
-    search_fields = ('name', 'type', 'variety')
-    list_filter = ('region', 'harvest_time')
 
 @admin.register(Plantation)
 class PlantationAdmin(admin.ModelAdmin):
     list_display = ('producer', 'location', 'status', 'area_size', 'crop_type', 'established_date')
     search_fields = ('producer__first_name', 'producer__last_name', 'crop_type')
     list_filter = ('status', 'crop_type')
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name']
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ['name', 'category', 'link']
+    search_fields = ['name', 'category__name']
 
 
 
