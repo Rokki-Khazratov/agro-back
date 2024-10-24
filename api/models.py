@@ -6,6 +6,11 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 #!UTILS:
 
+HEALTH_STATUS = [
+    ('yahshi', 'Yahshi'),
+    ('ortacha', 'ortacha'),
+    ('yomon', 'yomon'),
+]
 REGIONS = [
     ('tashkent_city', 'Tashkent City'),
     ('tashkent', 'Tashkent'),
@@ -159,7 +164,7 @@ class NewsImage(models.Model):
 
 
 # Модель для категории (синяя часть на скриншоте)
-class Category(models.Model):
+class ServiceCategory(models.Model):
     name = models.CharField(max_length=100)  
 
     def __str__(self):
@@ -167,7 +172,7 @@ class Category(models.Model):
 
 # Модель для сервиса (красная часть на скриншоте)
 class Service(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='services')  # Связь с категорией
+    category = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name='services')  # Связь с категорией
     name = models.CharField(max_length=100) 
     image = models.ImageField(upload_to="services_images/") 
     link = models.URLField(max_length=255) 
@@ -184,28 +189,41 @@ class Service(models.Model):
 
 
 
+# Модель для категории плантации (синяя часть на скриншоте)
+class PlantationCategory(models.Model):
+    name = models.CharField(max_length=100)  
 
+    def __str__(self):
+        return self.name
 
 
 # Модель для плантаций
 class Plantation(models.Model):
-    producer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='plantations')
+    name = models.CharField(max_length=50)
+    producer = models.CharField(max_length=255)
+    producer_profile = models.ForeignKey(User, on_delete=models.CASCADE, related_name='plantations_profile',blank=True,null=True)
+    INN = models.IntegerField()
     established_date = models.DateField()
+    category = models.ForeignKey(PlantationCategory,on_delete=models.CASCADE)
 
-    status = models.CharField(max_length=50)
     latitude = models.CharField(max_length=255) 
     longitude = models.CharField(max_length=255) 
-    crop_type = models.CharField(max_length=100)
+    address = models.CharField(max_length=255)
     area_size = models.FloatField()  
+
+    crop_type = models.CharField(max_length=100)
+
     region = models.CharField(max_length=50, choices=REGIONS)
     district = models.CharField(max_length=50) 
 
+    status = models.CharField(max_length=50, choices=HEALTH_STATUS)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'Plantation by {self.producer}'
 
-
+    def get_district_choices(self):
+        return DISTRICTS.get(self.region, [])
 
 
 

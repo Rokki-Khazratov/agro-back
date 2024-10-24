@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 from .models import *
 
 # Inline admin for images
@@ -31,8 +32,8 @@ class PlantationAdmin(admin.ModelAdmin):
     search_fields = ('producer__first_name', 'producer__last_name', 'crop_type')
     list_filter = ('status', 'crop_type')
 
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+@admin.register(ServiceCategory)
+class ServiceCategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
 
 @admin.register(Service)
@@ -41,6 +42,27 @@ class ServiceAdmin(admin.ModelAdmin):
     search_fields = ['name', 'category__name']
 
 
+
+
+
+# class PlantationForm(forms.ModelForm):
+#     class Meta:
+#         model = Plantation
+#         fields = '__all__'
+
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         if self.instance and self.instance.pk:
+#             # Заполняем районы в зависимости от региона, если запись существует
+#             self.fields['district'].choices = self.instance.get_district_choices()
+
+#         else:
+#             # Если запись новая, скрываем список районов до выбора региона
+#             self.fields['district'].choices = []
+
+# @admin.register(Plantation)
+# class PlantationAdmin(admin.ModelAdmin):
+#     form = PlantationForm
 
 # @admin.register(Notification)
 # class NotificationAdmin(admin.ModelAdmin):

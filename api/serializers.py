@@ -52,9 +52,18 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'image', 'link']
 
 # Сериализатор для категории с вложенными сервисами
-class CategorySerializer(serializers.ModelSerializer):
+class ServiceCategorySerializer(serializers.ModelSerializer):
     services = ServiceSerializer(many=True, read_only=True)  # Вложенные сервисы
 
     class Meta:
-        model = Category
+        model = ServiceCategory
         fields = ['id', 'name', 'services']
+
+
+
+class PlantationCategorySerializer(serializers.ModelSerializer):
+    # plantations = PlantationSerializer(many=True, read_only=True) 
+
+    class Meta:
+        model = PlantationCategory
+        fields = ['id', 'name']

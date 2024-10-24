@@ -15,8 +15,12 @@ urlpatterns = [
     path('newsimages/', NewsIMages.as_view(), name='newsimages-list-create'),
 
     # Services
-    path('categories/', CategoryListCreateView.as_view(), name='category-list-create'), 
-    path('categories/<int:pk>/', CategoryDetailView.as_view(), name='category-detail'), 
+    path('service-categories/', ServiceCategoryListCreateView.as_view(), name='service-category-list-create'), 
+    path('service-categories/<int:pk>/', ServiceCategoryDetailView.as_view(), name='service-category-detail'), 
     path('services/', ServiceListCreateView.as_view(), name='service-list-create'), 
     path('services/<int:pk>/', ServiceDetailView.as_view(), name='service-detail'),
+
+    # Plantations
+    path('plantations-categories/', PlantationCategoryListCreateView.as_view(), name='plantations-category-list-create'), 
+    path('plantations-categories/<int:pk>/', PlantationCategoryDetailView.as_view(), name='plantations-category-detail'), 
 ]

@@ -35,14 +35,24 @@ class NewsDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 
 # List and create view for categories
-class CategoryListCreateView(generics.ListCreateAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+class ServiceCategoryListCreateView(generics.ListCreateAPIView):
+    queryset = ServiceCategory.objects.all()
+    serializer_class = ServiceCategorySerializer
 
-# Detail view for retrieving, updating, and deleting a specific category
-class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+# Detail view for retrieving, updating, and deleting a specific ServiceCategory
+class ServiceCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ServiceCategory.objects.all()
+    serializer_class = ServiceCategorySerializer
+
+# List and create view for categories
+class PlantationCategoryListCreateView(generics.ListCreateAPIView):
+    queryset = PlantationCategory.objects.all()
+    serializer_class = PlantationCategorySerializer
+
+# Detail view for retrieving, updating, and deleting a specific PlantationCategory
+class PlantationCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PlantationCategory.objects.all()
+    serializer_class = PlantationCategorySerializer
 
     
 
