@@ -25,13 +25,6 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('email', 'first_name', 'last_name', 'created_at')
     search_fields = ('email', 'first_name', 'last_name')
 
-
-@admin.register(Plantation)
-class PlantationAdmin(admin.ModelAdmin):
-    list_display = ('producer', 'latitude','longitude', 'status', 'area_size', 'crop_type', 'established_date')
-    search_fields = ('producer__first_name', 'producer__last_name', 'crop_type')
-    list_filter = ('status', 'crop_type')
-
 @admin.register(ServiceCategory)
 class ServiceCategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
@@ -40,6 +33,43 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ['name', 'category', 'link']
     search_fields = ['name', 'category__name']
+
+
+
+
+
+@admin.register(PlantationCategory)
+class PlantationCategoryAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ['name']
+
+# Регистрируем модель District
+@admin.register(District)
+class DistrictAdmin(admin.ModelAdmin):
+    list_display = ['name', 'region']
+    search_fields = ['name', 'region']
+
+# Админка для Plantation
+@admin.register(Plantation)
+class PlantationAdmin(admin.ModelAdmin):
+    list_display = ['name', 'producer', 'garden_type', 'fruit_type', 'tree_count', 'garden_area', 'created_at']
+    search_fields = ['name', 'producer', 'garden_type__name', 'district__name', 'fruit_type']
+    list_filter = ['garden_type', 'district', 'fruit_type', 'created_at']
+    list_editable = ['garden_type', 'fruit_type', 'tree_count']
+    fieldsets = (
+        ('Общая информация', {
+            'fields': ('name', 'INN', 'producer', 'district', 'address', 'latitude', 'longitude')
+        }),
+        ('Информация о саде', {
+            'fields': ('garden_type', 'category', 'fruit_type', 'planting_scheme', 'tree_count', 'garden_area', 'irrigation_type', 'productivity')
+        }),
+        ('Дополнительная информация', {
+            'fields': ('status',)
+        }),
+    )
+    autocomplete_fields = ['garden_type', 'category', 'district']
+    readonly_fields = ['created_at']
+
 
 
 

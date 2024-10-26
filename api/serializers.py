@@ -44,14 +44,12 @@ class NewsImageSerializer(serializers.ModelSerializer):
         return instance
     
 
-
-# Сериализатор для сервиса
+# Сериализатор для категории с вложенными сервисами
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
         fields = ['id', 'name', 'image', 'link']
 
-# Сериализатор для категории с вложенными сервисами
 class ServiceCategorySerializer(serializers.ModelSerializer):
     services = ServiceSerializer(many=True, read_only=True)  # Вложенные сервисы
 
@@ -61,9 +59,25 @@ class ServiceCategorySerializer(serializers.ModelSerializer):
 
 
 
-class PlantationCategorySerializer(serializers.ModelSerializer):
-    # plantations = PlantationSerializer(many=True, read_only=True) 
 
+
+# Сериализатор для PlantationCategory
+class PlantationCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = PlantationCategory
-        fields = ['id', 'name']
+        fields = ['id', 'name'] 
+
+# Сериализатор для Plantation
+class PlantationSerializer(serializers.ModelSerializer):
+    garden_type = PlantationCategorySerializer(read_only=True)
+    category = PlantationCategorySerializer(read_only=True)
+
+    class Meta:
+        model = Plantation
+        fields = [
+            'id', 'name', 'INN', 'producer', 'garden_type', 'fruit_type', 'category', 
+            'district', 'address', 'latitude', 'longitude', 
+            'planting_scheme', 'garden_area', 'irrigation_type', 'productivity', 
+            'tree_count', 'status', 'created_at'
+            # ,'established_date'
+        ]

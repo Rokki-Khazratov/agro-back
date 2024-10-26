@@ -21,6 +21,8 @@ urlpatterns = [
     path('services/<int:pk>/', ServiceDetailView.as_view(), name='service-detail'),
 
     # Plantations
-    path('plantations-categories/', PlantationCategoryListCreateView.as_view(), name='plantations-category-list-create'), 
-    path('plantations-categories/<int:pk>/', PlantationCategoryDetailView.as_view(), name='plantations-category-detail'), 
+    path('plantations-categories/', PlantationCategoryListCreateAPIView.as_view(), name='plantation-category-list-create'),
+    path('plantations-categories/<int:pk>/', PlantationCategoryRetrieveUpdateDestroyAPIView.as_view(), name='plantation-category-detail'),
+    path('plantations/', PlantationListCreateAPIView.as_view(), name='plantation-list-create'),
+    path('plantations/<int:pk>/', PlantationRetrieveUpdateDestroyAPIView.as_view(), name='plantation-detail'),
 ]

@@ -5,136 +5,43 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 
 #!UTILS:
-
-HEALTH_STATUS = [
-    ('yahshi', 'Yahshi'),
-    ('ortacha', 'ortacha'),
-    ('yomon', 'yomon'),
-]
-REGIONS = [
-    ('tashkent_city', 'Tashkent City'),
-    ('tashkent', 'Tashkent'),
-    ('samarkand', 'Samarkand'),
-    ('bukhara', 'Bukhara'),
-    ('navoi', 'Navoi'),
-    ('fergana', 'Fergana'),
-    ('andijan', 'Andijan'),
-    ('namangan', 'Namangan'),
-    ('surkhandarya', 'Surkhandarya'),
-    ('kashkadarya', 'Kashkadarya'),
-    ('khorezm', 'Khorezm'),
-    ('karakalpakstan', 'Karakalpakstan'),
-    ('jizzakh', 'Jizzakh'),
-    ('sirdarya', 'Sirdarya'),
-]
-
-# Словарь районов, привязанный к каждому региону
-DISTRICTS = {
-    'tashkent_city': [
-        ('mirzo_ulugbek', 'Mirzo Ulugbek'),
-        ('yakkasaray', 'Yakkasaray'),
-    ],
-    'tashkent': [
-        ('bekabad', 'Bekabad'),
-        ('chinaz', 'Chinaz'),
-    ],
-    'samarkand': [
-              ('bulungur', 'Bulungur'),
-        ('pakhtachi', 'Pakhtachi'),
-    ],
-    'bukhara': [
-              ('buxara-1', 'buxara-1'),
-    ],
-    'navoi': [
-              ('Navoi-1', 'Navoi-1'),
-    ],
-    'fergana': [
-              ('Fergana-1', 'Fergana-1'),
-    ],
-    'andijan': [
-              ('Andijan-1', 'Andijan-1'),
-    ],
-    'namangan': [
-              ('Namangan-1', 'Namangan-1'),
-    ],
-    'surkhandarya': [
-              ('Surkhandarya-1', 'Surkhandarya-1'),
-    ],
-    'kashkadarya': [
-              ('Kashkadarya-1', 'Kashkadarya-1'),
-    ],
-    'khorezm': [
-              ('Khorezm-1', 'Khorezm-1'),
-    ],
-    'karakalpakstan': [
-              ('Karakalpakstan-1', 'Karakalpakstan-1'),
-    ],
-    'jizzakh': [
-              ('zaamin', 'Zaamin'),
-    ],
-    'sirdarya': [
-              ('gulistan', 'Gulistan'),
-    ],
-}
+class HealthStatus(models.TextChoices):
+    YAHSHI = 'yahshi', 'Yahshi'
+    ORTACHA = 'ortacha', 'Ortacha'
+    YOMON = 'yomon', 'Yomon'
 
 
 
+
+class District(models.Model):
+    REGION_CHOICES = [
+        ('tashkent_city', 'Ташкент (город)'),
+        ('tashkent', 'Ташкентская область'),
+        ('andijan', 'Андижанская область'),
+        ('bukhara', 'Бухарская область'),
+        ('djizzakh', 'Джиззакская область'),
+        ('fergana', 'Ферганская область'),
+        ('kashkadarya', 'Кашкадарьинская область'),
+        ('khorezm', 'Хорезмская область'),
+        ('namangan', 'Наманганская область'),
+        ('navoiy', 'Навоийская область'),
+        ('samarkand', 'Самаркандская область'),
+        ('sirdarya', 'Сырдарьинская область'),
+        ('surkhandarya', 'Сурхандарьинская область'),
+        ('karakalpakstan', 'Республика Каракалпакстан'),
+    ]
+
+    name = models.CharField(max_length=100)
+    region = models.CharField(max_length=50, choices=REGION_CHOICES)
+
+    # controller_name = models.CharField(max_length=255)
+    # controller_phone = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.name}, {self.region}'
 
 
 #?-----------------------------MODELS----------------------------------------
-# Пользовательский менеджер для модели User
-class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError('Email должен быть указан')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Суперпользователь должен иметь is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Суперпользователь должен иметь is_superuser=True.')
-
-        return self.create_user(email, password, **extra_fields)
-
-# Модель пользователя
-class User(AbstractBaseUser):
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    phone_number = models.CharField(max_length=15, unique=True)
-    role = models.CharField(max_length=30, choices=[
-        ('manufacturer', 'Manufacturer'),
-        ('specialist', 'Specialist'),
-        ('general_user', 'General User'),
-        ('press_officer', 'Press Officer'),
-        ('department_specialist', 'Department Specialist'),
-        ('admin', 'Admin')
-    ])
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-
-    objects = UserManager()
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
-
-    def __str__(self):
-        return self.email
-
-
-
 class NewsCategory(models.Model):
     name = models.CharField(max_length=255)
 
@@ -197,33 +104,43 @@ class PlantationCategory(models.Model):
         return self.name
 
 
-# Модель для плантаций
+
 class Plantation(models.Model):
+    FRUIT_TYPES = (
+        (1, 'Apple'),
+        (2, 'Peach'),
+    )
+
     name = models.CharField(max_length=50)
-    producer = models.CharField(max_length=255)
-    producer_profile = models.ForeignKey(User, on_delete=models.CASCADE, related_name='plantations_profile',blank=True,null=True)
     INN = models.IntegerField()
-    established_date = models.DateField()
-    category = models.ForeignKey(PlantationCategory,on_delete=models.CASCADE)
+    producer = models.CharField(max_length=255)
 
-    latitude = models.CharField(max_length=255) 
-    longitude = models.CharField(max_length=255) 
+    garden_type = models.ForeignKey(PlantationCategory, on_delete=models.CASCADE, related_name='plantations_garden_type')
+    fruit_type = models.IntegerField(choices=FRUIT_TYPES)
+    
+    category = models.ForeignKey(PlantationCategory, on_delete=models.CASCADE, related_name='plantations_category')
+    # established_date = models.DateField()
+
+    district = models.ForeignKey(District, on_delete=models.CASCADE, related_name='plantations')
     address = models.CharField(max_length=255)
-    area_size = models.FloatField()  
+    latitude = models.CharField(max_length=255)
+    longitude = models.CharField(max_length=255)
 
-    crop_type = models.CharField(max_length=100)
+    planting_scheme = models.CharField(max_length=20)
+    garden_area = models.FloatField()
+    irrigation_type = models.IntegerField()
+    productivity = models.FloatField()
+    tree_count = models.IntegerField()
 
-    region = models.CharField(max_length=50, choices=REGIONS)
-    district = models.CharField(max_length=50) 
-
-    status = models.CharField(max_length=50, choices=HEALTH_STATUS)
+    status = models.CharField(
+        max_length=7,  # Максимальная длина наибольшего статуса ('yahshi' - 6 символов)
+        choices=HealthStatus.choices,
+        default=HealthStatus.YAHSHI  # По умолчанию статус 'Yahshi'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'Plantation by {self.producer}'
-
-    def get_district_choices(self):
-        return DISTRICTS.get(self.region, [])
 
 
 
@@ -258,3 +175,53 @@ class Plantation(models.Model):
 
 #     def __str__(self):
 #         return f'Token for {self.user.email}'
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Email должен быть указан')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Суперпользователь должен иметь is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Суперпользователь должен иметь is_superuser=True.')
+
+        return self.create_user(email, password, **extra_fields)
+
+# Модель пользователя
+class User(AbstractBaseUser):
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    phone_number = models.CharField(max_length=15, unique=True)
+    role = models.CharField(max_length=30, choices=[
+        ('manufacturer', 'Manufacturer'),
+        ('specialist', 'Specialist'),
+        ('general_user', 'General User'),
+        ('press_officer', 'Press Officer'),
+        ('department_specialist', 'Department Specialist'),
+        ('admin', 'Admin')
+    ])
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name']
+
+    def __str__(self):
+        return self.email
