@@ -48,7 +48,7 @@ class NewsImageSerializer(serializers.ModelSerializer):
 class ServiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Service
-        fields = ['id', 'name', 'image', 'link']
+        fields = ['id', 'name', 'image', 'link_to_full']
 
 class ServiceCategorySerializer(serializers.ModelSerializer):
     services = ServiceSerializer(many=True, read_only=True)  # Вложенные сервисы

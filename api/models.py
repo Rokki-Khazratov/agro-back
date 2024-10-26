@@ -33,12 +33,11 @@ class District(models.Model):
 
     name = models.CharField(max_length=100)
     region = models.CharField(max_length=50, choices=REGION_CHOICES)
-
-    # controller_name = models.CharField(max_length=255)
-    # controller_phone = models.CharField(max_length=255)
+    controller_name = models.CharField(max_length=255)
+    controller_phone = models.CharField(max_length=255)
 
     def __str__(self):
-        return f'{self.name}, {self.region}'
+        return f'{self.name}, {self.get_region_display()}'
 
 
 #?-----------------------------MODELS----------------------------------------
@@ -82,10 +81,19 @@ class Service(models.Model):
     category = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE, related_name='services')  # Связь с категорией
     name = models.CharField(max_length=100) 
     image = models.ImageField(upload_to="services_images/") 
-    link = models.URLField(max_length=255) 
+    link_to_full = models.URLField(max_length=255) 
 
     def __str__(self):
         return self.name
+
+class ServiceReview(models.Model):
+    service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='reviews')
+    full_name = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=20)
+    text = models.CharField(max_length=2000) 
+
+    def __str__(self):
+        return f'Отзыв от {self.full_name} по {self.service.name}'
 
 
 

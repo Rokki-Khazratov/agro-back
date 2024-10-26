@@ -2,6 +2,11 @@ from django.contrib import admin
 from django import forms
 from .models import *
 
+
+
+
+
+admin.site.register(NewsCategory)
 # Inline admin for images
 class NewsImageAdmin(admin.StackedInline):
     model = NewsImage
@@ -19,20 +24,34 @@ class NewsAdmin(admin.ModelAdmin):
 class NewsImageAdmin(admin.ModelAdmin):
     list_display = ['image']
 
-
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'created_at')
-    search_fields = ('email', 'first_name', 'last_name')
-
 @admin.register(ServiceCategory)
 class ServiceCategoryAdmin(admin.ModelAdmin):
     list_display = ['name']
 
+
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'link']
-    search_fields = ['name', 'category__name']
+    list_display = ('name', 'category', 'link_to_full')  
+    search_fields = ('name',)  
+    list_filter = ('category',)  
+
+@admin.register(ServiceReview)
+class ServiceReviewAdmin(admin.ModelAdmin):
+    list_display = ('full_name','service', 'phone_number')  
+    search_fields = ('name',)  
+    list_filter = ('service',)  
+
+
+# @admin.register(ServiceReview)
+# class ServiceReviewAdmin(admin.ModelAdmin):
+#     list_display = ('full_name', 'phone_number', 'service', 'text_preview')  
+#     search_fields = ('full_name', 'phone_number', 'service__name')  
+#     list_filter = ('service',)  
+#     readonly_fields = ('service', 'full_name', 'phone_number', 'text')  
+
+#     def text_preview(self, obj):
+#         return (obj.text[:75] + '...') if len(obj.text) > 75 else obj.text
+#     text_preview.short_description = 'Текст отзыва'  
 
 
 
@@ -46,8 +65,9 @@ class PlantationCategoryAdmin(admin.ModelAdmin):
 # Регистрируем модель District
 @admin.register(District)
 class DistrictAdmin(admin.ModelAdmin):
-    list_display = ['name', 'region']
-    search_fields = ['name', 'region']
+    list_display = ['name', 'region','controller_name','controller_phone']
+    search_fields = ['name', 'controller_name']
+    list_filter = ['region']
 
 # Админка для Plantation
 @admin.register(Plantation)
@@ -69,6 +89,7 @@ class PlantationAdmin(admin.ModelAdmin):
     )
     autocomplete_fields = ['garden_type', 'category', 'district']
     readonly_fields = ['created_at']
+
 
 
 
@@ -107,4 +128,3 @@ class PlantationAdmin(admin.ModelAdmin):
 #     list_filter = ('expires_at',)
 
 
-admin.site.register(NewsCategory)
